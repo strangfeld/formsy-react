@@ -2,34 +2,40 @@ var React = require('react');
 var ReactDOM = require('react-dom');
 var Formsy = require('./../src/main.js');
 
-var Input = React.createClass({
-  onChange: function (event) {
-    this.props.setValue(event.currentTarget.value);
-  },
-  render: function () {
+class Input extends Formsy.Component {
+  constructor(props) {
+    super(props);
+  }
+
+  onChange(event) {
+    this.setValue(event.currentTarget.value);
+  }
+
+  render() {
+    console.log(this.context);
     return (
       <div>
-      {this.props.showRequired() ? 'required' : ''}
-      <input disabled={this.props.isFormDisabled()} value={this.props.getValue()} onChange={this.onChange}/>
+      {this.showRequired() ? 'required' : ''}
+      <input disabled={this.isFormDisabled()} value={this.getValue()} onChange={this.onChange}/>
       </div>
     );
   }
-});
+}
 
-Input = Formsy.HOC(Input);
+class SomeComp extends React.Component {
+  constructor(props) {
+    super(props);
 
-var SomeComp = React.createClass({
-  getInitialState: function () {
-    return  {
+    this.state = {
       isRequired: false
-    };
-  },
-  toggleRequired: function () {
-    this.setState({
-      isRequired: !this.state.isRequired
-    });
-  },
-  render: function () {
+    }
+  }
+
+  toggleRequired() {
+    this.setState();
+  }
+
+  render() {
     return (
       <div>
         <Input name="foo[0]" value={''} validations="isEmail" validationError="No email" required={this.state.isRequired}/>
@@ -37,19 +43,24 @@ var SomeComp = React.createClass({
       </div>
     )
   }
-});
+}
 
-var FormApp = React.createClass({
-  onSubmit: function (model) {
+class FormApp extends React.Component{
+  constructor(props) {
+    super(props);
+  }
+
+  onSubmit(model) {
     console.log('model', model);
-  },
-  render: function () {
+  }
+
+  render() {
     return (
       <Formsy.Form ref="form" onSubmit={this.onSubmit}>
         <SomeComp/>
       </Formsy.Form>
     );
   }
-});
+}
 
 ReactDOM.render(<FormApp />, document.getElementById('app'));

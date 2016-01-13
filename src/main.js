@@ -4,12 +4,14 @@ var validationRules = require('./validationRules.js');
 var formDataToObject = require('form-data-to-object');
 var utils = require('./utils.js');
 var Mixin = require('./Mixin.js');
+var Component = require('./Component.js');
 var HOC = require('./HOC.js');
 var Decorator = require('./Decorator.js');
 var options = {};
 var emptyArray = [];
 
 Formsy.Mixin = Mixin;
+Formsy.Component = Component;
 Formsy.HOC = HOC;
 Formsy.Decorator = Decorator;
 

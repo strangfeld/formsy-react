@@ -2,9 +2,11 @@ var utils = require('./utils.js');
 var React = global.React || require('react');
 var {convertValidationsToObject} = require('./utils.js');
 
-module.exports = {
-  getInitialState: function () {
-    return {
+class FormComponent extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
       _value: this.props.value,
       _isRequired: false,
       _isValid: true,
@@ -13,19 +15,10 @@ module.exports = {
       _validationError: [],
       _externalError: null,
       _formSubmitted: false
-    };
-  },
-  contextTypes: {
-    formsy: React.PropTypes.object // What about required?
-  },
-  getDefaultProps: function () {
-    return {
-      validationError: '',
-      validationErrors: {}
-    };
-  },
+    }
+  }
 
-  componentWillMount: function () {
+  componentWillMount() {
     var configure = function () {
       this.setValidations(this.props.validations, this.props.required);
 
@@ -50,15 +43,15 @@ module.exports = {
     }
     */
     configure();
-  },
+  }
 
   // We have to make the validate method is kept when new props are added
-  componentWillReceiveProps: function (nextProps) {
+  componentWillReceiveProps(nextProps) {
     this.setValidations(nextProps.validations, nextProps.required);
 
-  },
+  }
 
-  componentDidUpdate: function (prevProps) {
+  componentDidUpdate(prevProps) {
 
     // If the value passed has changed, set it. If value is not passed it will
     // internally update, and this will never run
@@ -70,24 +63,24 @@ module.exports = {
     if (!utils.isSame(this.props.validations, prevProps.validations) || !utils.isSame(this.props.required, prevProps.required)) {
       this.context.formsy.validate(this);
     }
-  },
+  }
 
   // Detach it when component unmounts
-  componentWillUnmount: function () {
+  componentWillUnmount() {
     this.context.formsy.detachFromForm(this);
     //this.props._detachFromForm(this);
-  },
+  }
 
-  setValidations: function (validations, required) {
+  setValidations(validations, required) {
 
     // Add validations to the store itself as the props object can not be modified
     this._validations = convertValidationsToObject(validations) || {};
     this._requiredValidations = required === true ? {isDefaultRequiredValue: true} : convertValidationsToObject(required);
 
-  },
+  }
 
   // We validate after the value has been set
-  setValue: function (value) {
+  setValue(value) {
     this.setState({
       _value: value,
       _isPristine: false
@@ -95,8 +88,8 @@ module.exports = {
       this.context.formsy.validate(this);
       //this.props._validate(this);
     }.bind(this));
-  },
-  resetValue: function () {
+  }
+  resetValue() {
     this.setState({
       _value: this.state._pristineValue,
       _isPristine: true
@@ -104,44 +97,55 @@ module.exports = {
       this.context.formsy.validate(this);
       //this.props._validate(this);
     });
-  },
-  getValue: function () {
+  }
+  getValue() {
     return this.state._value;
-  },
-  hasValue: function () {
+  }
+  hasValue() {
     return this.state._value !== '';
-  },
-  getErrorMessage: function () {
+  }
+  getErrorMessage() {
     var messages = this.getErrorMessages();
     return messages.length ? messages[0] : null;
-  },
-  getErrorMessages: function () {
+  }
+  getErrorMessages() {
     return !this.isValid() || this.showRequired() ? (this.state._externalError || this.state._validationError || []) : [];
-  },
-  isFormDisabled: function () {
+  }
+  isFormDisabled() {
     return this.context.formsy.isFormDisabled();
     //return this.props._isFormDisabled();
-  },
-  isValid: function () {
+  }
+  isValid() {
     return this.state._isValid;
-  },
-  isPristine: function () {
+  }
+  isPristine() {
     return this.state._isPristine;
-  },
-  isFormSubmitted: function () {
+  }
+  isFormSubmitted() {
     return this.state._formSubmitted;
-  },
-  isRequired: function () {
+  }
+  isRequired() {
     return !!this.props.required;
-  },
-  showRequired: function () {
+  }
+  showRequired() {
     return this.state._isRequired;
-  },
-  showError: function () {
+  }
+  showError() {
     return !this.showRequired() && !this.isValid();
-  },
-  isValidValue: function (value) {
+  }
+  isValidValue(value) {
     return this.context.formsy.isValidValue.call(null, this, value);
     //return this.props._isValidValue.call(null, this, value);
   }
+}
+
+FormComponent.contextTypes = {
+  formsy: React.PropTypes.object // What about required?
 };
+
+FormComponent.defaultProps = {
+  validationError: '',
+  validationErrors: {}
+};
+
+export default FormComponent;
