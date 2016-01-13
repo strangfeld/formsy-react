@@ -12,7 +12,6 @@ class Input extends Formsy.Component {
   }
 
   render() {
-    console.log(this.context);
     return (
       <div>
       {this.showRequired() ? 'required' : ''}
@@ -32,14 +31,16 @@ class SomeComp extends React.Component {
   }
 
   toggleRequired() {
-    this.setState();
+    this.setState({
+      isRequired: !this.state.isRequired
+    });
   }
 
   render() {
     return (
       <div>
         <Input name="foo[0]" value={''} validations="isEmail" validationError="No email" required={this.state.isRequired}/>
-        <button onClick={this.toggleRequired}>Test</button>
+        <button onClick={this.toggleRequired.bind(this)}>Test</button>
       </div>
     )
   }
