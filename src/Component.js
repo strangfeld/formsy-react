@@ -18,37 +18,38 @@ class FormComponent extends React.Component {
     }
   }
 
-  componentWillMount() {
-    var configure = function () {
-      this.setValidations(this.props.validations, this.props.required);
+  configure() {
+    this.setValidations(this.props.validations, this.props.required);
 
-      // Pass a function instead?
-      this.context.formsy.attachToForm(this);
-      //this.props._attachToForm(this);
-    }.bind(this);
+    // Pass a function instead?
+    this.context.formsy.attachToForm(this);
+    //this.props._attachToForm(this);
 
     if (!this.props.name) {
       throw new Error('Form Input requires a name property when used');
     }
 
     /*
-    if (!this.props._attachToForm) {
-      return setTimeout(function () {
-        if (!this.isMounted()) return;
-        if (!this.props._attachToForm) {
-          throw new Error('Form Mixin requires component to be nested in a Form');
-        }
-        configure();
-      }.bind(this), 0);
-    }
-    */
-    configure();
+     if (!this.props._attachToForm) {
+     return setTimeout(function () {
+     if (!this.isMounted()) return;
+     if (!this.props._attachToForm) {
+     throw new Error('Form Mixin requires component to be nested in a Form');
+     }
+     configure();
+     }.bind(this), 0);
+     }
+     */
+
+  }
+
+  componentWillMount() {
+    this.configure();
   }
 
   // We have to make the validate method is kept when new props are added
   componentWillReceiveProps(nextProps) {
     this.setValidations(nextProps.validations, nextProps.required);
-
   }
 
   componentDidUpdate(prevProps) {
