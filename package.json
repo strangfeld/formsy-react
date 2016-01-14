@@ -12,7 +12,7 @@
     "deploy": "NODE_ENV=production webpack -p --config webpack.production.config.js",
     "test": "babel-node testrunner",
     "examples": "webpack-dev-server --config examples/webpack.config.js --content-base examples",
-    "prepublish": "babel ./src/ -d ./lib/"
+    "install": "babel ./src/ -d ./lib/"
   },
   "author": "Christian Alfoni",
   "license": "MIT",
